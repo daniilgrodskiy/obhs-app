@@ -1,6 +1,6 @@
 # old_bridge_high_school_app
 
-A new Flutter project.
+This is the GitHub page for the Old Bridge High School App.
 
 ## Getting Started
 
