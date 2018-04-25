@@ -1,4 +1,4 @@
-# old_bridge_high_school_app
+# Old Bridge High School App
 
 This is the GitHub page for the Old Bridge High School App.
 
