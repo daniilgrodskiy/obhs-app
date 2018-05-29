@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'period_structure.dart';
+import 'package:old_bridge_high_school_app/drawer.dart';
+
+
 // import 'dart:async';
 // import 'dart:convert';
 // import 'package:http/http.dart' as http;
@@ -19,6 +22,7 @@ class BellSchedule extends StatelessWidget {
           fontFamily:'helvetica',
         ),
         home: MainBellSchedule(),
+        
       );
     }
 
@@ -36,9 +40,15 @@ class MainBellScheduleState extends State<MainBellSchedule> {
 
   Widget build(BuildContext context) {
 
-      return Container(
-        child: Scaffold(
-          body: Container(
+      return Scaffold(
+          drawer: AppDrawer(),
+          appBar: AppBar(
+            title: Text("Bell Schedule"),
+          ),
+          // body: Column(
+            // children: <Widget>[
+            //   //DropDownMenu(),
+            body: Container(
             padding: new EdgeInsets.all(16.0),
             child: new Center(
               child: new DefaultTabController(
@@ -156,7 +166,75 @@ class MainBellScheduleState extends State<MainBellSchedule> {
               ),
             ),
           ),
-        ),
+      //       ],
+            
+      //   ),
+      //   ),
       );
+  }
+}
+
+class DropDownMenu extends StatefulWidget {
+  @override
+  _DropDownMenuState createState() => new _DropDownMenuState();
+}
+
+class _DropDownMenuState extends State<DropDownMenu> {
+
+
+  String _value;
+  String _placeholder = 'Bryan';
+  List<String> _values = new List<String>();
+
+  void initState() {
+    _values.addAll(["Bryan", "Chris", "Heather", "Tammy"]);
+    _value = _values.elementAt(0);
+    super.initState();
+
+  }
+
+  void _onChanged(String value) {
+    setState(() {
+      _value = value;      
+    });
+    _placeholder = value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+      return Container(
+        padding: EdgeInsets.all(32.0),
+        child: Column(
+          children: <Widget>[
+            DropdownButton(
+              value: _value,
+              items: _values.map((String value){
+                //.map does a function to each value in _values
+                ///the 'String value' (to my understanding) is 
+                ///just a placeholder value like in a...
+                ///...foreach loop e.g. for (value : _values)
+                ///'value' variable can be named anything
+                return DropdownMenuItem(
+                  value: value,
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.home),
+                      Text('Person: ${value}')
+                    ],
+                  ),
+                );
+              }).toList(),
+              onChanged: (String value){
+                _onChanged(value);
+              },
+            ),
+            Container(
+              child: Text(
+                '$_placeholder'
+              ),
+            )
+          ],
+        )
+    );
   }
 }

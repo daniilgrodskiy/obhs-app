@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart';
+import 'package:old_bridge_high_school_app/drawer.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main() => runApp(new News());
 
@@ -20,7 +21,7 @@ class News extends StatelessWidget {
         //title: 'News',
         theme: ThemeData(
           primaryColor: Colors.deepPurple[300],
-          fontFamily:'helvetica',
+          fontFamily:'lato',
         ),
         
         home: PhotoList(),
@@ -82,9 +83,10 @@ class PhotoListState extends State<PhotoList> {
   Widget build(BuildContext context) {
       // TODO: implement build
       return Scaffold(
-        // appBar: AppBar(
-        //   title: Text("News"),
-        // ),
+        drawer: AppDrawer(),
+        appBar: AppBar(
+          title: Text("News"),
+        ),
         
         body: Center(
           child: ListView.builder(
@@ -111,66 +113,66 @@ class PhotoListState extends State<PhotoList> {
         return null;
       }
 
-    return GestureDetector(
+      return GestureDetector(
 
-      onTap: (){
-          var tappedContainer = index + 1;
-          //^weird indexes
-          print("Container $tappedContainer was clicked");
-          Navigator.push(context,
-            MaterialPageRoute(
-              builder: (context) => new DetailScreen(photo: list[index])));
-              //builder: (BuildContext context) => new PageTwo()));            
-        },
-      
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: NetworkImage(list[index].url), 
+        onTap: (){
+            var tappedContainer = index + 1;
+            //^weird indexes
+            print("Container $tappedContainer was clicked");
+            Navigator.push(context,
+              MaterialPageRoute(
+                builder: (context) => new DetailScreen(photo: list[index])));
+                //builder: (BuildContext context) => new PageTwo()));            
+          },
+        
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: NetworkImage(list[index].url), 
+            ),
+            color: Colors.deepPurple[200],
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            boxShadow: [BoxShadow(
+              color: Colors.black38,
+              blurRadius: 4.0,
+            ),]
           ),
-          color: Colors.deepPurple[200],
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          boxShadow: [BoxShadow(
-            color: Colors.black,
-            blurRadius: 10.0,
-          ),]
-        ),
-        padding: EdgeInsets.all(5.0),
-        margin: EdgeInsets.all(10.0),
-        height: 400.0,
+          padding: EdgeInsets.all(5.0),
+          margin: EdgeInsets.all(10.0),
+          height: 400.0,
 
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    list[index].title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "helvetica",
-                      height: 1.1,
-                      color: Colors.white,
-                      //originally Colors.white
-                      fontSize: 40.0)
-                  ),
-                  Text(
-                    list[index].blurb,
-                    style: TextStyle(
-                      fontFamily: "helvetica",
-                      height: 1.5,
-                      color: Colors.grey[200],
-                      //originally Colors.grey[300]
-                      fontSize: 20.0),
-                  ),
-                ],
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      list[index].title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "helvetica",
+                        height: 1.1,
+                        color: Colors.white,
+                        //originally Colors.white
+                        fontSize: 40.0)
+                    ),
+                    Text(
+                      list[index].blurb,
+                      style: TextStyle(
+                        fontFamily: "helvetica",
+                        height: 1.5,
+                        color: Colors.grey[200],
+                        //originally Colors.grey[300]
+                        fontSize: 20.0),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
+        );
     }
 }
 
@@ -188,33 +190,10 @@ class Photo {
       blurb = map['blurb'];
 }
 
-class PageTwo extends StatelessWidget{ 
-//delete this class eventually; it serves no purpose other than acting as
-//a reference point for the navigator controllers
-  Widget build(BuildContext context) =>
-  
-    Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).canvasColor,
-        elevation: 1.0,
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.popUntil(
-              context, ModalRoute.withName(Navigator.defaultRouteName)
-            );
-          },
-          child: Text("Go back!"),
-        ),
-      ),
-    );
-}
-
 class DetailScreen extends StatelessWidget {
   
   final Photo photo;
-  ScrollController _scrollController = new ScrollController();
+  ScrollController _scrollViewController = new ScrollController();
 
   DetailScreen({Key key, this.photo}) : super(key: key);
 
@@ -223,111 +202,121 @@ class DetailScreen extends StatelessWidget {
       // TODO: implement build
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.deepPurple[200],
-        //bottomOpacity: 0.0,
-        //toolbarOpacity: 0.0,
-          actions: <Widget>[ new GestureDetector(
-            onTap: (){
-              Navigator.popUntil(
-                context, ModalRoute.withName(Navigator.defaultRouteName)
-              );
-            },
-            child: Icon(
-              Icons.cancel
+      body: NestedScrollView(
+        controller: _scrollViewController,
+        headerSliverBuilder: (BuildContext context, bool boxIsScrolled) {
+          //header for ScrollView; i.e. 'AppBar'
+          return <Widget> [
+            SliverAppBar(
+              title: Text(photo.title),
+              pinned: false,
+              floating: true,
+              forceElevated: boxIsScrolled,
             ),
-          ),
-        ],
-      ),
-      body: ListView(
-          controller: _scrollController,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                // Stack(
-                //   children: <Widget>[
-                //     Positioned(
-                //       left: 30.0,
-                //       top: 30.0,
-                //       child: Container(
-                //         // width: 100.0,
-                //         // color: Colors.red,
-                //       ),
-                //     )
-                //   ],
-                // ),
-                Container(
-                  decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(photo.url), 
-                  ),
-                  color: Colors.deepPurple[200],
-                  ),
-                    
-                  //padding: EdgeInsets.all(5.0),
-                  //margin: EdgeInsets.all(15.0),
-                  ///^^^THE PARASITES THAT WERE PREVENTING ME FROM MAKING MY
-                  ////IMAGE STRETCH FULLY LOL
+          ];
+        },
+          body: ListView(
+            padding: EdgeInsets.all(0.0),
+          //controller: _scrollViewController,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  // Stack(
+                  //   children: <Widget>[
+                  //     Positioned(
+                  //       left: 30.0,
+                  //       top: 30.0,
+                  //       child: Container(
+                  //         // width: 100.0,
+                  //         // color: Colors.red,
+                  //       ),
+                  //     )
+                  //   ],
+                  // ),
+                  Container(
+                    decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(photo.url), 
+                    ),
+                    color: Colors.deepPurple[200],
+                    ),
+                      
+                    // padding: EdgeInsets.only(top: 0.0),
+                    // margin: EdgeInsets.only(top: 0.0),
+                    ///^^^THE PARASITES THAT WERE PREVENTING ME FROM MAKING MY
+                    ////IMAGE STRETCH FULLY LOL
 
-                  height: 500.0,
-                  width: double.infinity,
-                    child: Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(right: 50.0),
-                              child: Text(
-                                photo.title, 
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  height: 1.1,
-                                  fontFamily: "helvetica",
-                                  color: Colors.white,
-                                  fontSize: 40.0)
+                    height: 500.0,
+                    width: double.infinity,
+                      child: Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(right: 50.0),
+                                child: Text(
+                                  photo.title, 
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.1,
+                                    fontFamily: "helvetica",
+                                    color: Colors.white,
+                                    fontSize: 40.0)
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 50.0),
-                              child: Text(
-                                photo.blurb,
-                                style: TextStyle(
-                                  height: 1.5,
-                                  fontFamily: "helvetica",
-                                  color: Colors.grey[300],
-                                  fontSize: 20.0),
+                              Padding(
+                                padding: EdgeInsets.only(right: 50.0),
+                                child: Text(
+                                  photo.blurb,
+                                  style: TextStyle(
+                                    height: 1.5,
+                                    fontFamily: "helvetica",
+                                    color: Colors.grey[300],
+                                    fontSize: 20.0),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(30.0),
-                    child: Text(
-                      photo.description,
-                      style: TextStyle(
-                        height: 1.25,
-                        fontSize: 18.0,
-                        color: Colors.grey[800],
-                        //letterSpacing: 1.1
-                        ),
-                    ),
-                  )
-                ],
-              ),
-            ],
+                    Padding(
+                      padding: EdgeInsets.all(30.0),
+                      child: Text(
+                        photo.description,
+                        style: TextStyle(
+                          height: 1.25,
+                          fontSize: 18.0,
+                          color: Colors.grey[800],
+                          //letterSpacing: 1.1
+                          ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.deepPurple[300],
+          child: Icon(FontAwesomeIcons.arrowUp),
+          onPressed: () {
+            _scrollViewController.animateTo(
+              _scrollViewController.position.minScrollExtent,
+              duration: Duration(milliseconds: 1000),
+              curve: Curves.decelerate);
+          },
         ),
     );
   }
 }
                     
       
+
+
 
 
 

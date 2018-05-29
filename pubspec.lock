@@ -102,6 +102,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
+  font_awesome_flutter:
+    dependency: "direct main"
+    description:
+      name: font_awesome_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.0"
   front_end:
     dependency: transitive
     description:
@@ -186,6 +193,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.1+4"
+  menu_swipe_helpers:
+    dependency: "direct main"
+    description:
+      name: menu_swipe_helpers
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
   meta:
     dependency: transitive
     description:
