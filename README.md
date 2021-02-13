@@ -12,9 +12,9 @@
 The OBHS App is the official app for Old Bridge High School in Matawan, NJ! It was built using Flutter, Dart, and Firebase between May to October 2018.
 
 ## Features
-- Links to school-related events, bus schedules, grades, and more
 - Personalized bell schedule based around what period you have lunch
-- See how much time is left in class depending on the your half-day and full-day schedules
+- See how much time is left in class depending on your selected half-day and full-day schedules
+- Links to school-related events, bus schedules, grades, and more!
 
 ## Credits
 The OBHS App was solely coded and developed by Daniil Grodskiy. The logo was designed by Brandon Merola. The three app store images were created by Dean Chumash. Additional input was given by Altin Marku and Dean Chumash. Thank you to everyone who tested the app when it was in beta!
